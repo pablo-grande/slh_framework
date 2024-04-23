@@ -1,0 +1,27 @@
+[build-system]
+build-backend = "flit_core.buildapi"
+requires = ["flit_core >=3.2,<4"]
+
+[project]
+name = "slh_framework"
+version = "0.0.1"
+dependencies = [
+    "numpy>=1.26.4"
+]
+requires-python = ">=3.8"
+authors = [
+  {name = "Pablo R. Grande", email = "priutor@uoc.edu"},
+]
+maintainers = [
+  {name = "Pablo R. Grande", email = "priutor@uoc.edu"},
+]
+description = "Sim-Learn Heuristics Framework"
+readme = "README.md"
+license = {text = "MIT License"}
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python"
+]
+
+[project.urls]
+Repository = "https://github.com/pablo-grande/slh_framework"
