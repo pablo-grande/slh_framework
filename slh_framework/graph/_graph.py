@@ -60,6 +60,7 @@ class Route:
         edges (list): sorted edges in this route
         reward (float): total reward collected in this route
     """
+
     edges: list = None
     cost: float = 0.0
     reward: float = 0.0
@@ -77,6 +78,6 @@ class Route:
             self.edges.insert(0, inverse_edge)
 
     def __str__(self):
-        route_path = "0" + ''.join(f" -> {edge.end.id_}" for edge in self.edges)
+        route_path = "0" + "".join(f" -> {edge.end.id_}" for edge in self.edges)
         total_reward = f"Route det. reward: {self.reward}; det. cost: {self.cost}"
         return f"{route_path}\n{total_reward}"

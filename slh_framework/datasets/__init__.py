@@ -7,7 +7,11 @@ SEED_SIZE = 7
 
 
 class TxtFileParser:
-    meta = {"n": ("number_of_nodes", int), "m": ("fleet_size", int), "tmax": ("route_max_cost", float)}
+    meta = {
+        "n": ("number_of_nodes", int),
+        "m": ("fleet_size", int),
+        "tmax": ("route_max_cost", float),
+    }
 
     def __init__(self, filepath):
         self.filepath = filepath
@@ -26,7 +30,7 @@ class TxtFileParser:
                         self.data[key_name] = key_type(value)
                     else:
                         # it's a node
-                        nodes.append(tuple([float(x) for x in line.split(';')]))
+                        nodes.append(tuple([float(x) for x in line.split(";")]))
         self.data["node_list"] = nodes
 
     def parse_line(self, line, separator=";"):
@@ -52,7 +56,7 @@ class TestInstance:
     The Test class represents a test instance with various parameters.
 
     Attributes:
-        instance_filepath (str): The filepath of the test instance.
+        instance_name (str): The name of the test instance.
         max_time (int): The maximum computation time in seconds.
         first_param (float): The lower bound for beta in Geom(beta).
         second_param (float): The upper bound for beta in Geom(beta).
@@ -60,11 +64,12 @@ class TestInstance:
         short_sim (int): The number of runs in a short simulation.
         long_sim (int): The number of runs in a long simulation.
         var_level (float): The variance level.
+        filename (str): The filepath of the test instance.
     """
 
     def __init__(
         self,
-        instance_filepath,
+        instance_name="",
         max_time=60,
         first_param=0.1,
         second_param=0.3,
@@ -72,8 +77,9 @@ class TestInstance:
         short_sim=100,
         long_sim=1000,
         var_level=1.0,
+        filename=None,
     ):
-        self.instance_name = instance_filepath.split(os.path.sep)[-1].split(".txt")[0]
+        self.instance_name = instance_name
         self.max_time = int(max_time)
         self.first_param = float(first_param)
         self.second_param = float(second_param)
@@ -85,9 +91,17 @@ class TestInstance:
         self.short_sim = int(short_sim)
         self.long_sim = int(long_sim)
         self.var_level = float(var_level)
-        file_parser = SelectedParser(instance_filepath)
-        file_parser.parse_file()
-        self.instance_data = file_parser.data
+        self.instance_data = {
+            "number_of_nodes": 0,
+            "fleet_size": 0,
+            "route_max_cost": 0.0,
+            "node_list": [],
+        }
+        if filename is not None:
+            file_parser = SelectedParser(filename)
+            file_parser.parse_file()
+            self.instance_data = file_parser.data
+            self.instance_name = filename.split(os.path.sep)[-1].split(".txt")[0]
 
     def __repr__(self):
         return f"<{self.__class__.__name__}>: {self.__dict__}"
@@ -97,5 +111,5 @@ _dirname = os.path.dirname(__file__)
 tests = {}
 for file in os.listdir(_dirname):
     if os.path.isfile(os.path.join(_dirname, file)) and file.endswith(".txt"):
-        test = TestInstance(f"{_dirname}{os.path.sep}{file}")
+        test = TestInstance(filename=f"{_dirname}{os.path.sep}{file}")
         tests[test.instance_name] = test

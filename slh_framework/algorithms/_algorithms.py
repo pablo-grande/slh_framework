@@ -13,7 +13,12 @@ def pj_heuristic(test_instance, test_data, simulation):
     efficiency_list, initial_solution = HeuristicUtils.generate_initial_solution(
         test_data, fleet_size, route_max_cost, nodes
     )
-    simulation(initial_solution, test_instance.short_sim, route_max_cost, test_instance.var_level)
+    simulation(
+        initial_solution,
+        test_instance.short_sim,
+        route_max_cost,
+        test_instance.var_level,
+    )
     # set initial solution as OBDF and OBS solutions
     OBD = initial_solution
     OBS = initial_solution
@@ -34,7 +39,12 @@ def pj_heuristic(test_instance, test_data, simulation):
             OBD = new_solution
         if new_solution.reward > OBS.reward:
             # simulate new deterministic solution in stochastic environment
-            simulation(new_solution, test_instance.short_sim, route_max_cost, test_instance.var_level)
+            simulation(
+                new_solution,
+                test_instance.short_sim,
+                route_max_cost,
+                test_instance.var_level,
+            )
             # update OBS solution if appropiate
             if new_solution.reward_after > OBS.reward_after:
                 OBS = new_solution
@@ -45,7 +55,12 @@ def pj_heuristic(test_instance, test_data, simulation):
     simulation(OBD, test_instance.long_sim, route_max_cost, test_instance.var_level)
     OBS = OBD
     for elite_solution in elite_solutions:
-        simulation(elite_solution, test_instance.long_sim, route_max_cost, test_instance.var_level)
+        simulation(
+            elite_solution,
+            test_instance.long_sim,
+            route_max_cost,
+            test_instance.var_level,
+        )
         if elite_solution.reward_after > OBS.reward_after:
             OBS = elite_solution
     return OBD, OBS
