@@ -16,6 +16,8 @@ class EdgeType(Enum):
 
 
 class ExperimentalSimulation(Simulation):
+    condition_factors = {}
+
     @classmethod
     def set_edges_type(cls, solution):
         # check for divisibilty on node id
@@ -49,9 +51,9 @@ class ExperimentalSimulation(Simulation):
 
         Args:
             edge (Edge): The edge for which to calculate the cost.
-            condition_factors (dict): A dictionary of condition factors where each key is a 
-                                    condition name and the value is another dictionary 
-                                    containing 'factor' and 'value' which are the multiplier 
+            condition_factors (dict): A dictionary of condition factors where each key is a
+                                    condition name and the value is another dictionary
+                                    containing 'factor' and 'value' which are the multiplier
                                     to the edge cost and the environmental condition value, respectively.
 
         Returns:
@@ -75,13 +77,9 @@ class MonteCarlo(ExperimentalSimulation):
     def simulation(cls, solution, max_iterations, route_max_cost, var_level):
         cls.set_edges_type(solution)
         accumlated_reward = 0
+        first_condition = next(iter(cls.condition_factors))
         for _ in range(max_iterations):
-            condition_factors = {
-                "condition_1": {
-                    "factor": 0.2,
-                    "value": np.random.random()
-                }
-            }
+            cls.condition_factors[first_condition]["value"] = np.random.random()
             reward_in_solution = 0
             for route in solution.routes:
                 route_reward, route_cost = 0, 0
@@ -95,11 +93,15 @@ class MonteCarlo(ExperimentalSimulation):
                             mean=edge.cost, var_level=var_level
                         )
                     elif edge.type_ == EdgeType.DYNAMIC:
-                        condition_factors["condition_2"] = {
-                            "factor": 0.3,
-                            "value": np.random.random()
-                        }
-                        edge_cost = super(MonteCarlo, cls).get_dynamic_value(edge, condition_factors)
+                        for condition in cls.condition_factors:
+                            if condition == first_condition:
+                                continue
+                            cls.condition_factors[condition][
+                                "value"
+                            ] = np.random.random()
+                        edge_cost = super(MonteCarlo, cls).get_dynamic_value(
+                            edge, cls.condition_factors
+                        )
                     route_cost += edge_cost
 
                 if route_cost > route_max_cost:
