@@ -3,7 +3,7 @@ import logging
 from random import seed as random_seed
 from numpy import random as np_random
 
-from slh_framework.datasets import tests, TestInstance
+from slh_framework.datasets import TestInstance
 from slh_framework.algorithms import pj_heuristic
 from slh_framework.simulations import MonteCarlo as Simulation
 

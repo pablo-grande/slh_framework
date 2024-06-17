@@ -1,4 +1,4 @@
-"""Creates a drone mission for going to the best signal quality spots (systematically)."""
+"""Creates a drone mission for going to random signal spots."""
 import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import networkx as nx
@@ -11,20 +11,18 @@ from slh_framework.graph import Node, Edge, Route
 grid_size = 10
 signal_quality = np.random.rand(grid_size, grid_size)
 
-# Sort signal qualities from best signal to worst
-best_qualities = np.argsort(signal_quality, axis=None)[::-1]
-# Rebuild signal coordinates ordered by value
-sorted_coords = [np.unravel_index(index, signal_quality.shape) for index in best_qualities]
-sorted_values = signal_quality.flatten()[best_qualities]
+coords = [(i, j) for i in range(grid_size) for j in range(grid_size)]
+np.random.shuffle(coords)
+selected_coords = coords[:10]
 
 nodes, edges = [], []
-for index, coord in enumerate(sorted_coords[:10]):
+for index, coord in enumerate(selected_coords):
     x, y = coord
     node_values = {
         "id_": index,
         "x": x,
         "y": y,
-        "reward": sorted_values[index]
+        "reward": signal_quality[x, y]
     }
     nodes.append(Node(**node_values))
 
@@ -43,6 +41,7 @@ route = Route()
 route.edges.extend(edges)
 route.cost = sum(edge.cost for edge in route.edges)
 route.reward = sum(node.reward for node in nodes)
+# WARNING: This is a dynamic attribute!
 route.nodes = nodes
 
 # create subplot to match NetworkX with signal quality grid

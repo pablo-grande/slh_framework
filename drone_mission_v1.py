@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+
 from slh_framework.graph import Node, Edge, Route
 
 def draw_route(route, signal_quality):
