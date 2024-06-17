@@ -1,5 +1,6 @@
 import logging
 import unittest
+
 from random import seed as random_seed
 from numpy import random as np_random
 

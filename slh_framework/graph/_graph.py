@@ -1,3 +1,6 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
 from dataclasses import dataclass
 
 
@@ -81,3 +84,29 @@ class Route:
         route_path = "0" + "".join(f" -> {edge.end.id_}" for edge in self.edges)
         total_reward = f"Route det. reward: {self.reward}; det. cost: {self.cost}"
         return f"{route_path}\n{total_reward}"
+    
+    def draw(self, filename=None):
+        G = nx.DiGraph()
+        positions = {}
+        labels = {}
+
+        for edge in self.edges:
+            G.add_node(edge.origin.id_)
+            G.add_node(edge.end.id_)
+            positions[edge.origin.id_] = (edge.origin.x, edge.origin.y)
+            positions[edge.end.id_] = (edge.end.x, edge.end.y)
+            labels[edge.origin.id_] = str(edge.origin.id_)
+            labels[edge.end.id_] = str(edge.end.id_)
+
+        for edge in self.edges:
+            G.add_edge(edge.origin.id_, edge.end.id_, weight=edge.cost)
+
+        nx.draw(G, positions, with_labels=True, labels=labels, node_size=500, node_color='skyblue', font_size=10, font_weight='bold', arrowsize=20)
+        edge_labels = {(edge.origin.id_, edge.end.id_): f'{edge.cost:.1f}' for edge in self.edges}
+        nx.draw_networkx_edge_labels(G, positions, edge_labels=edge_labels)
+        plt.title('Route Visualization')
+        if filename is not None:
+            plt.savefig(filename)
+        else: 
+            plt.show()
+
