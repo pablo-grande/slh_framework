@@ -1,4 +1,5 @@
 import logging
+import textwrap
 
 from random import seed as random_seed
 from numpy import random as np_random
@@ -61,24 +62,28 @@ Simulation.condition_factors = {
 OBD, OBS = pj_heuristic(
     test, test.instance_data, Simulation.simulation
 )
+
+route_data = "\n".join(textwrap.indent(str(route), '\t') for route in OBD.routes)
 logger.info(
     f"""
     OBD solution:
     cost: {OBD.cost}
     reward: {OBD.reward}
     reward after: {OBD.reward_after}
-    route: {"".join(str(route) for route in OBD.routes)}
+    route:
+    {route_data}
     """
 )
 
-
+route_data = "\n".join(textwrap.indent(str(route), '\t') for route in OBS.routes)
 logger.info(
     f"""
     OBS solution:
     cost: {OBS.cost}
     reward: {OBS.reward}
     reward after: {OBS.reward_after}
-    route: {"".join(str(route) for route in OBS.routes)}
+    route:
+    {route_data}
     """
 )
 
