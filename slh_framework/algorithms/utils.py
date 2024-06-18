@@ -1,16 +1,17 @@
-import time
-import random
 import operator
+import math
+import random
+import time
 
 import numpy as np
 
-from copy import copy
+from copy import copy, deepcopy
 from slh_framework.simulations.base import Solution
 from slh_framework.graph import Node, Edge, Route
 
 
 def euclidean(x_1, x_2, y_1, y_2):
-    return np.math.sqrt((x_2 - x_1) ** 2 + (y_2 - y_1) ** 2)
+    return math.sqrt((x_2 - x_1) ** 2 + (y_2 - y_1) ** 2)
 
 
 def timeit(func):
@@ -95,9 +96,44 @@ class HeuristicUtils:
         return efficiency_list, initial_solution
 
     @staticmethod
+    def modify_solution(current_solution, fleet_size, route_max_cost, nodes, efficiency_list):
+        new_solution = deepcopy(current_solution)
+        
+        # select a route to modify
+        route_index = random.randint(0, len(new_solution.routes) - 1)
+        route = new_solution.routes[route_index]
+        
+        # Swap two edges within the route if there are more than one edge
+        if len(route.edges) > 1:
+            i, j = random.sample(range(len(route.edges)), 2)
+            route.edges[i], route.edges[j] = route.edges[j], route.edges[i]
+        
+        # Move an edge to a different route if there is more than one route
+        if len(new_solution.routes) > 1:
+            from_route_index = random.randint(0, len(new_solution.routes) - 1)
+            to_route_index = random.choice([i for i in range(len(new_solution.routes)) if i != from_route_index])
+            from_route = new_solution.routes[from_route_index]
+            to_route = new_solution.routes[to_route_index]
+            
+            if from_route.edges:
+                edge_to_move = from_route.edges.pop(random.randint(0, len(from_route.edges) - 1))
+                insertion_index = random.randint(0, len(to_route.edges))
+                to_route.edges.insert(insertion_index, edge_to_move)
+        
+        # Calculate cost and reward for the modified solution
+        for route in new_solution.routes:
+            route.cost = sum(edge.cost for edge in route.edges)
+            route.reward = sum(edge.end.reward for edge in route.edges if edge.end is not None)
+        
+        new_solution.total_cost = sum(route.cost for route in new_solution.routes)
+        new_solution.total_reward = sum(route.reward for route in new_solution.routes)
+        
+        return new_solution
+    
+    @staticmethod
     def get_random_position(beta_1, beta_2, efficiency_list_size):
         beta = beta_1 + random.random() * (beta_2 - beta_1)
-        index = int(np.math.log(random.random()) / np.math.log(1 - beta))
+        index = int(math.log(random.random()) / math.log(1 - beta))
         return index % efficiency_list_size
 
     @staticmethod

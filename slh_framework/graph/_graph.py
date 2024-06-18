@@ -81,9 +81,9 @@ class Route:
             self.edges.insert(0, inverse_edge)
 
     def __str__(self):
-        route_path = "0" + "".join(f" -> {edge.end.id_}" for edge in self.edges)
+        route_path = "0" + "".join(f" -> ({edge.end.id_}: {edge.end.x},{edge.end.y})" for edge in self.edges)
         total_reward = f"Route det. reward: {self.reward}; det. cost: {self.cost}"
-        return f"{route_path}\n{total_reward}"
+        return f"{total_reward}\n{route_path}"
     
     def draw(self, filename=None):
         G = nx.DiGraph()

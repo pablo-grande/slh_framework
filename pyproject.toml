@@ -6,7 +6,9 @@ requires = ["flit_core >=3.2,<4"]
 name = "slh_framework"
 version = "0.0.1"
 dependencies = [
-    "numpy>=1.26.4"
+    "numpy>=1.26.4",
+    "matplotlib==3.9.0",
+    "networkx==3.3"
 ]
 requires-python = ">=3.8"
 authors = [
