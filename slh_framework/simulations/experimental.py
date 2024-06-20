@@ -63,7 +63,7 @@ class ExperimentalSimulation(Simulation):
         b_e = 1  # coefficient for edge standard cost
         dynamic_cost = b0 + b_e * edge.cost
 
-        # Iterate through each condition factor and apply it to the cost calculation
+        # iterate through each condition factor and apply it to the cost calculation
         for condition, factor_value in condition_factors.items():
             factor = factor_value["factor"]
             value = factor_value["value"]

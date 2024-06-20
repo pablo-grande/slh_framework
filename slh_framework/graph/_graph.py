@@ -86,6 +86,13 @@ class Route:
         return f"{total_reward}\n{route_path}"
     
     def draw(self, filename=None):
+        """Draws a directed graph of the route.
+
+        The graph includes nodes positioned according to their coordinates, with labels and edges showing costs.
+
+        Args:
+            filename (str, optional): If provided, saves the graph to the specified file. Otherwise, displays the graph.
+        """
         G = nx.DiGraph()
         positions = {}
         labels = {}

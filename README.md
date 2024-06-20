@@ -24,10 +24,17 @@ Based on [Sim-learn-heuristic-TOP](https://github.com/ICSO-IN3/Sim-learn-heurist
 Clone the repository and install the required packages:
 
 ```bash
-git clone https://github.com/yourusername/slh_framework.git
+git clone https://github.com/pablo-grande/slh_framework.git
 cd slh_framework
 pip install -e .
 ```
+
+or
+
+```
+pip install git+https://github.com/pablo-grande/slh_framework.git
+```
+
 
 ## Usage
 Example of running a heuristic algorithm with Monte Carlo simulation:
